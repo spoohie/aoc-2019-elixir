@@ -1,9 +1,18 @@
-defmodule Aoc.Day1_1 do
+defmodule Aoc.Day1_2 do
 
     def run do
         data = Parser.parse({:nl, "#{__MODULE__}"})
-        # IO.puts("#{inspect(data)}")
-        result = Enum.reduce(data, 0, fn d, acc -> div(d, 3) - 2 + acc end)
+        result = Enum.reduce(data, 0, fn d, acc -> calculate_fuel(d) + acc end)
         IO.puts(result)
+    end
+
+    defp calculate_fuel(fuel) do
+        additional_fuel = div(fuel, 3) - 2
+
+        if(additional_fuel < 0) do
+            0
+        else
+            additional_fuel + calculate_fuel(additional_fuel)
+        end
     end
 end
