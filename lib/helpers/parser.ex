@@ -1,34 +1,36 @@
-defmodule Parser do
+defmodule Aoc.Parser do
 
-    def parse(command)
+    def parse(command, options)
 
-    def parse({:nl, modulename}) do
-        modulename
+    def parse(name, [delimiter]) do
+        name
         |> parse_filename()
         |> read_file()
-        |> parse_newline()
-        |> to_int()
+        |> parse_items(delimiter)
     end
 
-    # def parse({:sp, file})
+    def parse(name, [delimiter, :int]) do
+        parse(name, [delimiter])
+        |> Enum.map(&String.to_integer/1)
+    end
 
-    def parse_filename(modulename) do
-        modulename
-        |> String.slice(11..14)
+    defp parse_filename(name) do
+        Regex.run(~r{Day\d+}, name)
+        |> List.first()
         |> String.downcase()
         |> (&("input/" <> &1 <> ".txt")).()
     end
 
-    def read_file(file) do
+    defp read_file(file) do
         {:ok, input} = File.read(file)
         input
     end
 
-    def parse_newline(data) do
-        String.split(data, "\n", trim: true)
-    end
-
-    def to_int(data) do
-        Enum.map(data, &String.to_integer/1)
+    defp parse_items(data, delimiter) do
+        d = case delimiter do
+            :nl -> "\n"
+            :cm -> ","
+        end
+        String.split(data, d, trim: true)
     end
 end
