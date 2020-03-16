@@ -1,17 +1,20 @@
 defmodule Aoc.Day1_2 do
 
     def run do
-        data = Aoc.Parser.parse("#{__MODULE__}", [:nl, :int])
-        result = Enum.reduce(data, 0, fn d, acc -> calculate_fuel(d) + acc end)
-        IO.puts(result)
+        Aoc.Parser.parse(__MODULE__, [:nl, :int])
+        |> Stream.map(&calculate_fuel_chain/1)
+        |> Enum.sum
+        |> IO.puts
     end
 
-    defp calculate_fuel(fuel) do
-        additional_fuel = div(fuel, 3) - 2
-        if(additional_fuel < 0) do
-            0
-        else
-            additional_fuel + calculate_fuel(additional_fuel)
-        end
+    defp calculate_fuel_chain(fuel) do
+        additional_fuel(fuel)
+        |> Stream.iterate(&additional_fuel/1)
+        |> Stream.take_while(&(&1 > 0))
+        |> Enum.sum
+    end
+
+    defp additional_fuel(fuel) do
+        div(fuel, 3) - 2
     end
 end

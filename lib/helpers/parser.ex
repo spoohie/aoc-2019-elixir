@@ -3,7 +3,7 @@ defmodule Aoc.Parser do
     def parse(command, options)
 
     def parse(name, [delimiter]) do
-        name
+        "#{name}"
         |> parse_filename()
         |> read_file()
         |> parse_items(delimiter)

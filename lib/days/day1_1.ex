@@ -1,8 +1,13 @@
 defmodule Aoc.Day1_1 do
 
     def run do
-        data = Aoc.Parser.parse("#{__MODULE__}", [:nl, :int])
-        result = Enum.reduce(data, 0, fn d, acc -> div(d, 3) - 2 + acc end)
-        IO.puts(result)
+        Aoc.Parser.parse(__MODULE__, [:nl, :int])
+        |> Stream.map(&additional_fuel/1)
+        |> Enum.sum
+        |> IO.puts
+    end
+
+    defp additional_fuel(fuel) do
+        div(fuel, 3) - 2
     end
 end
